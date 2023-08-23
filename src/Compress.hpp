@@ -17,9 +17,16 @@ void Compress::rar(std::string folderName)
 
     std::string command = std::string("del") + " " + fullPath + ".rar";
     std::cout << "Executing: " << command << std::endl;
-    std::system(command.data());
+    
+    auto code = std::system(command.data());
 
     command = std::string(defaultWinRarPath) + " a -r -m5 -df " + fullPath + ".rar " + fullPath;
     std::cout << "Executing: " << command << std::endl;
-    std::system(command.data());
+
+    code += std::system(command.data());
+
+    if (code)
+    {
+        throw std::runtime_error{"Deleting or archivating has failed"};
+    }
 }

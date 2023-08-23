@@ -16,6 +16,8 @@ void bye()
     std::cin.get();
 }
 
+#define EXIT_WITH_FAILURE bye(); return EXIT_FAILURE;
+
 int main(int argc, char* argv[])
 {
     
@@ -38,15 +40,13 @@ int main(int argc, char* argv[])
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
+        EXIT_WITH_FAILURE
     }
     catch(...)
     {
         std::cout << "Unknown error  |-_-|";
-        bye();
-        return EXIT_FAILURE;
+        EXIT_WITH_FAILURE
     }
     
-    
-    bye();
     return EXIT_SUCCESS;
 }
