@@ -35,10 +35,6 @@ int main(int argc, char* argv[])
         
         Compress::rar(weekday);
     }
-    catch(const std::runtime_error& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
     catch(const std::exception& e)
     {
         std::cerr << e.what() << '\n';
