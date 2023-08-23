@@ -12,7 +12,7 @@
 
 void bye()
 {
-    std::wcout << L"Для выхода нажмите Enter";
+    std::cout << "Press Enter to quit";
     std::cin.get();
 }
 
@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     
     std::locale::global(std::locale("ru_RU.UTF-8"));
 
-    CopyAccomplisher c{L"backups.txt"};
+    CopyAccomplisher c{"backups.txt"};
     try
     {
         auto weekday = c.accomplish();
@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
             bye();
             return EXIT_FAILURE;
         }
-        std::wcout << L"Копирование выполнено, выполняется архивация...\n";
+        std::cout << "Copying has complete, archiving...\n";
         
         Compress::rar(weekday);
     }

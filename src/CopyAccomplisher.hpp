@@ -32,7 +32,7 @@ std::string CopyAccomplisher<CharT>::accomplish()
     std::string weekDay;
     if (!msg.empty())
     {
-        std::wcout << msg << std::endl;
+        std::cout << msg << std::endl;
         return {};
     }
     
@@ -61,7 +61,7 @@ void CopyAccomplisher<CharT>::copyOne(const fsys::path& from, const fsys::path& 
 {
     std::error_code ec;
 
-    std::wcout << L"Выполняется копирование из " << from << L" в " << to << "...\n";
+    std::wcout << L"Copying from " << from << L" to " << to << "...\n";
 
     if (!fsys::exists(to))
     {

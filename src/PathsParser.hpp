@@ -11,7 +11,7 @@
 #include <fstream>
 #include <string>
 #include <string_view>
-
+#include <type_traits>
 
 namespace 
 {
@@ -26,8 +26,7 @@ public:
     using string = std::basic_string<CharT>;
 
 
-    NativeMessage(string what): std::runtime_error{""}, m_what(std::move(what)) { }
-    NativeMessage(std::string what = ""): std::runtime_error{what} {}
+    NativeMessage(string what = ""): std::runtime_error{std::is_same_v<string, std::string> ? what : ""}, m_what(std::move(what)) { }
 
     const string& nativeWhat() const { return m_what; }
 
@@ -83,13 +82,12 @@ NativeMessage<CharT> PathsParser<CharT>::readPathsFromFile()
     {
         if (!fsys::exists(fsys::current_path()/m_filename))
         {
-            errorMsg = {L"Файл backups.txt должен существовать в той же директории, что и программа,\n"
-                         "и должен содержать пути для копирования. Текущий путь: " + fsys::current_path().wstring()};
+            errorMsg = {"The backups.txt file must exist in the same directory as the program is,\n"
+                         "and must contain paths to copy from and to. Current path: " + fsys::current_path().string()};
         }
         else
         {
-            errorMsg = {L"Не удалось открыть файл. Убедитесь, что он существует и "
-                         "находится в той же директории, что и программа."};
+            errorMsg = {"Failed opening file. Make sure it exists and is in the same directory as the program is."};
         } 
         return errorMsg;
     }
@@ -99,17 +97,17 @@ NativeMessage<CharT> PathsParser<CharT>::readPathsFromFile()
     {
         if (!success.second)
         {
-            return NativeMessage<CharT>{L"Не удалось добавить путь"};
+            return NativeMessage<CharT>{"Failed adding a path"};
         }
         success = m_result.insert(std::move(getLineFromPaths(f)));
     }
     if (f.fail())
     {
-        return NativeMessage<CharT>{L"Непредвиденный сбой при чтении файла. Убедитесь, что файл заполнен в формате "
-                                "\n\"путь_из > путь_в\" (два пути, посередине правая угловая скобка, по типу стрелочки, число пробелов вокруг скобки не имеет значения)"
-                                "\n... (то же, что и сверху, опционально)"
-                                "\nЕсли ошибка продолжает появляться, значит разработчик не удосужился качественно отладить софт.\nСорямба \t"
-                                LR"(\_("-")_/)"};
+        return NativeMessage<CharT>{"Unexpected failure when reading the file. Make sure the file is in the format "
+                                "\n\"path_from > path_to\" (two paths, with angle bracket in the middle, whitespaces around angle brackets don't matter)"
+                                "\n... (the same as above, optionally)"
+                                "\nIf the error continues to occur, that means the developer didn't debug the software good enough.\nWell, I'm so sorry \t"
+                                R"(\_("-")_/)"};
     }
 
     return errorMsg;    // ok if it's empty
@@ -121,7 +119,7 @@ std::pair<fsys::path, fsys::path> PathsParser<CharT>::getLineFromPaths(ifstream&
 {
     string from, to;
 
-    std::getline(f, from, L'>');
+    std::getline(f, from, '>');
     // unexpected eof-state leads to passing the fail-state
     if (f.eof())
     {
