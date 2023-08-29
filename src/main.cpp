@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
             bye();
             return EXIT_FAILURE;
         }
-        std::cout << "Copying has complete, archiving...\n";
+        std::cout << "Archivation...\n";
         
         Compress::rar(weekday);
     }
